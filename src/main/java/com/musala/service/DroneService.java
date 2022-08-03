@@ -10,7 +10,7 @@ public interface DroneService {
 
 	DroneDTO fetchDroneById(int droneID) throws AppException;
 
-	Set<DroneDTO> fetchAllDrones() throws AppException;
+	List<DroneDTO> fetchAllDrones() throws AppException;
 
 	DroneDTO registerDrone(DroneDTO movie) throws AppException;
 }
