@@ -58,6 +58,26 @@ public class DroneDAO {
 		rs.close();
 		return data;
 	}
+	
+	public List<DroneDTO> fetchAvailableDrones() throws SQLException, Exception {
+		List<DroneDTO> data = new ArrayList<>();
+		String query="SELECT * FROM DRONE WHERE STATE IN('IDLE','LOADING')";
+		ResultSet rs = this.database.getConnection().createStatement().executeQuery(query);
+		while(rs.next()) {
+			DroneDTO drone = new DroneDTO();
+			drone.setDroneId(rs.getInt("drone_id"));
+			drone.setBattery(rs.getInt("battery"));
+			drone.setModel(rs.getString("model"));
+			drone.setSerial(rs.getString("serial"));
+			drone.setState(rs.getString("state"));
+			drone.setWeight(rs.getInt("weight"));
+			
+			data.add(drone);
+		}
+		
+		rs.close();
+		return data;
+	}
 
 	public DroneDTO registerDrone(DroneDTO drone) throws SQLException, Exception {
 		
@@ -107,25 +127,23 @@ public class DroneDAO {
 		return result;
 	}
 	
-	public boolean logDroneBattery(String drone_id, String battery) throws SQLException, Exception {
+	public boolean logDroneBattery(int drone_id, int battery) throws SQLException, Exception {
 			
 		this.database.getConnection().setAutoCommit(false);
-		String query ="INSERT INTO droneBatterLog(drone_id,battery,) VALUES(?,?)";
-		PreparedStatement stmt = this.database.getConnection().prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
-		stmt.setInt(1, Integer.parseInt(drone_id));
-		stmt.setInt(1, Integer.parseInt(battery));
+		String query ="INSERT INTO droneBatteryLog(drone_id,battery) VALUES(?,?)";
+		PreparedStatement stmt = this.database.getConnection().prepareStatement(query);
+		stmt.setInt(1, drone_id);
+		stmt.setInt(2, battery);
 		
 		boolean status = stmt.execute();
-		
-		stmt.close();
 		this.database.getConnection().commit();
-		
+		stmt.close();
 		return status;
 	}
 	
-	public List<DroneBatterLog> getDroneBatteryLog(String droneID) throws SQLException, Exception {
+	public List<DroneBatterLog> getDroneBatteryLog(int droneID) throws SQLException, Exception {
 		List<DroneBatterLog> data = new ArrayList<>();
-		String query="SELECT d.name,dl.* FROM droneBatterLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
+		String query="SELECT d.name,dl.* FROM droneBatteryLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
 		ResultSet rs = this.database.getConnection().createStatement().executeQuery(query);
 		while(rs.next()) {
 			DroneBatterLog log = new DroneBatterLog();

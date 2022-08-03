@@ -117,12 +117,12 @@ public class MedicationController {
 		builder.excludeFieldsWithoutExposeAnnotation();
 		Gson gson = builder.create();
 		try {
-			System.out.println("Here at medication ID");
+			
 			MedicationDTO response = serv.getMedicationByID(medicationID);
 			
 			
 			List<Link> links = new ArrayList<>();
-			links.add(new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(response.getDroneId())).toString(),"self"));
+			links.add(new Link(uriInfo.getAbsolutePathBuilder().toString(),"self"));
 			response.setLinks(links);
 			
 			

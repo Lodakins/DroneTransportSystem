@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.musala.dto.DroneBatterLog;
 import com.musala.dto.DroneDTO;
 import com.musala.dto.Link;
 import com.musala.dto.ResponseMessage;
@@ -53,6 +54,80 @@ public class DroneController {
 			
 			return Response.ok().entity(obj.toString()).build();
 			
+		}catch(AppException e) {
+			e.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage(e.getMessage(), false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Internal server error", false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		}catch(Exception e2) {
+			e2.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Internal server error", false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+			
+		}
+	}
+	
+	@GET
+	@Path("/free")
+	@Produces("application/json")
+	public Response getAvailableDrones(@Context UriInfo uriInfo) {
+		
+		JsonObject obj = new JsonObject();
+		GsonBuilder builder = new GsonBuilder();
+		builder.excludeFieldsWithoutExposeAnnotation();
+		Gson gson = builder.create();
+
+		
+		try {
+			List<DroneDTO> data = droneService.fetchAvailableDrones(uriInfo);
+			
+			obj.add("data", new JsonParser().parse(gson.toJson(data)));
+			obj.addProperty("count", data == null? 0 : data.size());
+			obj.add("response", new JsonParser().parse(new ResponseMessage("Drones fetched successfully", true).toString()));
+			
+			
+			return Response.ok().entity(obj.toString()).build();
+			
+		}catch(AppException e) {
+			e.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage(e.getMessage(), false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Internal server error", false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+		}catch(Exception e2) {
+			e2.printStackTrace();
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Internal server error", false))));
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();
+			
+		}
+	}
+	
+	
+	@GET
+	@Path("/{droneID}/battery/logs")
+	@Produces("application/json")
+	public Response getDronesBatteryLogs(@Context UriInfo uriInfo,@PathParam("droneID") int droneID) {
+		
+		JsonObject obj = new JsonObject();
+		GsonBuilder builder = new GsonBuilder();
+		builder.excludeFieldsWithoutExposeAnnotation();
+		Gson gson = builder.create();
+		
+		
+		try {
+			
+			 List<DroneBatterLog> logs = droneService.getDronesBatteryLogs(droneID);
+			 
+			 obj.add("data", new JsonParser().parse(gson.toJson(logs)));
+			 obj.addProperty("count", logs == null? 0 : logs.size());
+			 obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Drone battery fetched", true))));
+			
+			return Response.ok().entity(obj.toString()).build();
 		}catch(AppException e) {
 			e.printStackTrace();
 			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage(e.getMessage(), false))));

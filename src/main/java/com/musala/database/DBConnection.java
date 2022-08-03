@@ -2,16 +2,19 @@ package com.musala.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import com.musala.dao.PeriodicTask;
 
 public class DBConnection implements IDatabase {
 	
 	private static DBConnection db = null;
 	private static Connection con = null;
 	
-
+	public DBConnection() {
+		
+	}
+	
+	
 	public Connection getConnection() throws Exception {
 		if(con == null) {
 			initiateConnection();
@@ -24,7 +27,7 @@ public class DBConnection implements IDatabase {
 	private static void initiateConnection() {
 		try {
 			Class.forName ("org.h2.Driver");
-			con  =  DriverManager.getConnection("jdbc:h2:~/dronedb;INIT=RUNSCRIPT FROM 'classpath:Create_Drone_Table.sql'","","");
+			con  =  DriverManager.getConnection("jdbc:h2:~/dronedb;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE;INIT=RUNSCRIPT FROM 'classpath:Create_Drone_Table.sql'","","");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

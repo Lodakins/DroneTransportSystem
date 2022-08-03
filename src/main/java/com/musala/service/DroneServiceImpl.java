@@ -8,8 +8,10 @@ import java.util.List;
 import javax.ws.rs.core.UriInfo;
 
 import com.musala.dao.DroneDAO;
+import com.musala.dao.PeriodicTask;
 import com.musala.database.DBConnection;
 import com.musala.database.IDatabase;
+import com.musala.dto.DroneBatterLog;
 import com.musala.dto.DroneDTO;
 import com.musala.dto.Link;
 import com.musala.utils.AppException;
@@ -20,6 +22,10 @@ public class DroneServiceImpl  implements DroneService{
 	
 	DroneDAO droneDAO = new DroneDAO(db);
 	
+	 public DroneServiceImpl() {
+		 PeriodicTask.runPeriodicTask();
+		
+	}
 	
 	@Override
 	public DroneDTO fetchDroneById(int droneID) throws SQLException, Exception{
@@ -74,6 +80,28 @@ public class DroneServiceImpl  implements DroneService{
 		DroneDTO response = droneDAO.registerDrone(drone);
 		
 		return response;
+	}
+
+	@Override
+	public List<DroneDTO> fetchAvailableDrones(UriInfo uriInfo) throws SQLException, Exception {
+		// TODO Auto-generated method stub
+		List<DroneDTO> list = droneDAO.fetchAvailableDrones();
+		 
+		 for(DroneDTO item : list) {
+			 List<Link> links = new ArrayList<>();
+			 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getDroneId())).toString(), "self");
+			 links.add(self);
+			 
+			 item.setLinks(links);
+		 }
+		return list;
+	}
+	
+	@Override
+	public List<DroneBatterLog> getDronesBatteryLogs(int droneID) throws SQLException, Exception {
+		// TODO Auto-generated method stub
+		List<DroneBatterLog> list = droneDAO.getDroneBatteryLog(droneID);
+		return list;
 	}
 
 }
