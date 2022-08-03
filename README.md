@@ -11,13 +11,15 @@ A web service that contains controller for performing action on drones such as r
 
 ## TO BUILD THIS PROJECT
 - Clone to your local repository and 
-- Open directory in your terminal and run command ``` mvn  clean install validate ```
+- Open directory in your terminal and run command ``` mvn  clean test ```
 
 ##  TO RUN THIS PROJECT 
 -  Run command  ``` mvn deploy ```
+- A war is generated and can be found in the target folder
+-  Deploy war in tomcat server.
 
 ## ASSUMPTIONS
-- Drone battery level is set 100 at registration
+- Drone battery level is set 100 , weight set to 20gr,  state set to IDLE at registration
 
 
 **Base URL**: <br>{{localhost}}/DroneTransportSystem<br> 

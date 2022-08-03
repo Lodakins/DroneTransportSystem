@@ -87,7 +87,7 @@ public class MedicationController {
 			
 			
 			obj.add("data", new JsonParser().parse(gson.toJson(response)));
-			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Drone save successfully", true))));
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Medication save successfully", true))));
 			
 			return Response.status(201).entity(obj.toString()).build();
 			
@@ -129,7 +129,7 @@ public class MedicationController {
 			obj.add("data", new JsonParser().parse(gson.toJson(response)));
 			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Drone save successfully", true))));
 			
-			return Response.status(201).entity(obj.toString()).build();
+			return Response.status(Status.OK).entity(obj.toString()).build();
 			
 		}catch(AppException e) {
 			e.printStackTrace();

@@ -143,7 +143,7 @@ public class DroneDAO {
 	
 	public List<DroneBatterLog> getDroneBatteryLog(int droneID) throws SQLException, Exception {
 		List<DroneBatterLog> data = new ArrayList<>();
-		String query="SELECT d.name,dl.* FROM droneBatteryLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
+		String query="SELECT d.serial,dl.* FROM droneBatteryLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
 		ResultSet rs = this.database.getConnection().createStatement().executeQuery(query);
 		while(rs.next()) {
 			DroneBatterLog log = new DroneBatterLog();
@@ -151,11 +151,11 @@ public class DroneDAO {
 			log.setDroneID(rs.getInt("drone_id"));
 			log.setDate(rs.getString("created_at").split(" ")[0]);
 			log.setTime(rs.getString("created_at").split(" ")[1]);
-			log.setName(rs.getString("name"));
+			log.setName(rs.getString("serial"));
 			
 			data.add(log);
 		}
-		
+		rs.close();
 		
 		return data;
 	}

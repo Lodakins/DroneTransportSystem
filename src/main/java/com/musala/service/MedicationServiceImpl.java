@@ -75,7 +75,7 @@ public class MedicationServiceImpl implements MedicationService {
 		
 		// validate drone state
 		if(!allowedState.contains(drone.getState())){
-			throw new AppException("Drone not available. Can't load medication");
+			throw new AppException("Drone maximum load reached. Can't load medication");
 		}
 		
 		

@@ -36,7 +36,7 @@ public class Logger {
 			Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
 			System.out.println(path);
 			File folder = new File("C://log");
-			File folder1 = new File(path.toString()+"/logs");
+			File folder1 = new File(path.toAbsolutePath().getParent().toString()+"/logs");
 			if (!folder.isDirectory()) {
 				folder.mkdir();
 			}
@@ -45,7 +45,7 @@ public class Logger {
 			}
 			
 			File logfile = new File("C://log/publicportal-" + date + ".txt");
-			File logfile1 = new File(path.toString()+"logs/batterlogs-" + date + ".txt");
+			File logfile1 = new File(path.toAbsolutePath().getParent().toString()+"logs/batterlogs-" + date + ".txt");
 			logfile.setReadable(true);
 			logfile.setWritable(true);
 			if (logfile.createNewFile()) {
