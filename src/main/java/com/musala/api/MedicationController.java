@@ -49,6 +49,7 @@ public class MedicationController {
 			
 			obj.add("data", new JsonParser().parse(gson.toJson(medications)));
 			obj.addProperty("count", medications == null ? 0 : medications.size());
+			obj.add("response", new JsonParser().parse(new ResponseMessage("Medications fetched successfully", true).toString()));
 
 			return Response.ok().entity(obj.toString()).build();
 			
@@ -116,8 +117,8 @@ public class MedicationController {
 		builder.excludeFieldsWithoutExposeAnnotation();
 		Gson gson = builder.create();
 		try {
-			
-			MedicationDTO response = serv.saveMedicationByDrone(droneID, med);
+			System.out.println("Here at medication ID");
+			MedicationDTO response = serv.getMedicationByID(medicationID);
 			
 			
 			List<Link> links = new ArrayList<>();
@@ -131,6 +132,7 @@ public class MedicationController {
 			return Response.status(201).entity(obj.toString()).build();
 			
 		}catch(AppException e) {
+			e.printStackTrace();
 			e.printStackTrace();
 			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage(e.getMessage(), false))));
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(obj.toString()).build();

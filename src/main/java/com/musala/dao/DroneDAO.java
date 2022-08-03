@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.musala.database.IDatabase;
+import com.musala.dto.DroneBatterLog;
 import com.musala.dto.DroneDTO;
 
 public class DroneDAO {
@@ -97,13 +98,48 @@ public class DroneDAO {
 		// TODO Auto-generated method stub
 		
 		String sql="";
-		sql += state == null  || state.equals("") ? "" : " state="+ state;
-		sql += weight == null  || weight.equals("") ? "" : " weight="+ weight;
+		sql += state == null  || state.equals("") ? "" : " state='"+ state +"'";
+		sql += weight == null  || weight.equals("") ? "" : ", weight="+ weight;
 		String query="UPDATE drone set"+sql+" where drone_id="+droneID ;
 		
 		boolean result = con.createStatement().execute(query);
 		
 		return result;
+	}
+	
+	public boolean logDroneBattery(String drone_id, String battery) throws SQLException, Exception {
+			
+		this.database.getConnection().setAutoCommit(false);
+		String query ="INSERT INTO droneBatterLog(drone_id,battery,) VALUES(?,?)";
+		PreparedStatement stmt = this.database.getConnection().prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+		stmt.setInt(1, Integer.parseInt(drone_id));
+		stmt.setInt(1, Integer.parseInt(battery));
+		
+		boolean status = stmt.execute();
+		
+		stmt.close();
+		this.database.getConnection().commit();
+		
+		return status;
+	}
+	
+	public List<DroneBatterLog> getDroneBatteryLog(String droneID) throws SQLException, Exception {
+		List<DroneBatterLog> data = new ArrayList<>();
+		String query="SELECT d.name,dl.* FROM droneBatterLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
+		ResultSet rs = this.database.getConnection().createStatement().executeQuery(query);
+		while(rs.next()) {
+			DroneBatterLog log = new DroneBatterLog();
+			log.setBattery(rs.getInt("battery"));
+			log.setDroneID(rs.getInt("drone_id"));
+			log.setDate(rs.getString("created_at").split(" ")[0]);
+			log.setTime(rs.getString("created_at").split(" ")[1]);
+			log.setName(rs.getString("name"));
+			
+			data.add(log);
+		}
+		
+		
+		return data;
 	}
 
 }

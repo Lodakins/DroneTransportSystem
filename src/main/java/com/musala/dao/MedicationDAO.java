@@ -20,6 +20,7 @@ public class MedicationDAO {
 		droneDao = new DroneDAO(database);
 	}
 	public MedicationDTO saveMedicationByDrone(int droneID, MedicationDTO med, boolean isLoaded,int maxWeight) throws SQLException, Exception {
+		
 		this.database.getConnection().setAutoCommit(false);
 		String query ="INSERT INTO medication(name,weight,code,image,drone_id) VALUES(?,?,?,?,?)";
 		PreparedStatement stmt = this.database.getConnection().prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
@@ -82,7 +83,7 @@ public class MedicationDAO {
 			med.setCode(rs.getString("code"));
 			med.setDroneId(rs.getInt("drone_id"));
 			med.setName(rs.getString("name"));
-			med.setWeight(rs.getString("weight"));
+			med.setWeight(Integer.toString(rs.getInt("weight")));
 			med.setMedId(rs.getInt("med_id"));
 			med.setImage(rs.getString("image"));
 		}

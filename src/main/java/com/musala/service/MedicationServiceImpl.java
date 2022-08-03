@@ -2,7 +2,9 @@ package com.musala.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -25,16 +27,24 @@ public class MedicationServiceImpl implements MedicationService {
 	private final int MAXWEIGHT = 500;
 
 	@Override
-	public MedicationDTO getMedicationByID(int medID) throws SQLException, Exception {
+	public MedicationDTO getMedicationByID(int medID) throws AppException,SQLException, Exception {
 		// TODO Auto-generated method stub
 		
 		MedicationDTO med = medDAO.getMedicationByID(medID);
+		if(med == null) {
+			throw new AppException("Invalid medication ID");
+		}
 		return med;
 	}
 
 	@Override
-	public List<MedicationDTO> getMedicationsByDrone(UriInfo uriInfo, int droneID) throws SQLException, Exception {
+	public List<MedicationDTO> getMedicationsByDrone(UriInfo uriInfo, int droneID) throws AppException,SQLException, Exception {
 		// TODO Auto-generated method stub
+		
+		DroneDTO drone = droneDAO.fetchDroneById(droneID);
+		if(drone == null) {
+			throw new AppException("Invalid drone ID");
+		}
 		
 		 List<MedicationDTO> medication = medDAO.getAllMedicationByDrone(droneID);
 		 
@@ -45,14 +55,18 @@ public class MedicationServiceImpl implements MedicationService {
 			 item.setLinks(links);
 		 }
 		
-		return null;
+		return medication;
 	}
 
 	@Override
 	public MedicationDTO saveMedicationByDrone(int droneID, MedicationDTO medication)  throws SQLException, Exception{
 		
 		DroneDTO drone = droneDAO.fetchDroneById(droneID);
+		List<String> allowedState = Arrays.asList("LOADING","IDLE");
 		
+		if(drone == null) {
+			throw new AppException("Invalid drone ID");
+		}
 
 		// validate drone battery
 		if(drone.getBattery() <  25) {
@@ -60,8 +74,8 @@ public class MedicationServiceImpl implements MedicationService {
 		}
 		
 		// validate drone state
-		if(!drone.getState().equals("LOADING") || !drone.getState().equals("IDLE")) {
-			throw new AppException("Drone busy. Can't load medication");
+		if(!allowedState.contains(drone.getState())){
+			throw new AppException("Drone not available. Can't load medication");
 		}
 		
 		
@@ -69,9 +83,19 @@ public class MedicationServiceImpl implements MedicationService {
 			throw new AppException("Missing required fields");
 		}
 		// validate total weight
-		int maxWeight = Integer.parseInt(medication.getWeight()) +  drone.getWeight();
+		int maxWeight = drone.getWeight() + Integer.parseInt(medication.getWeight());
 		if( maxWeight > MAXWEIGHT) {
-			throw new AppException("Drone max weight exceeded. Available weight: "+ (MAXWEIGHT - maxWeight) +"");
+			throw new AppException("Drone max weight exceeded. Available weight: "+ (MAXWEIGHT - drone.getWeight()) +"");
+		}
+		
+		// validate medication name
+		if(!Pattern.matches("^[A-Za-z0-9_-]*$", medication.getName())) {
+			throw new AppException("Invalid drone name. Can only contain letters, numbers, ‘-‘, ‘_’");
+		}
+		
+		// validate code
+		if(!Pattern.matches("^[A-Z0-9_]*$", medication.getCode())) {
+			throw new AppException("Invalid drone code. Can only contain upper case letters, numbers, ‘_‘");
 		}
 		
 		boolean isLoaded = maxWeight == MAXWEIGHT ? true : false;
