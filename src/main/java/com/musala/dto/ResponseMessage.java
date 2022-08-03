@@ -1,10 +1,13 @@
 package com.musala.dto;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 public class ResponseMessage {
 
+	@Expose
 	private String message;
+	@Expose
 	private boolean status;
 	
 	

@@ -1,16 +1,19 @@
 package com.musala.service;
 
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.google.gson.JsonObject;
 import com.musala.dto.DroneDTO;
 import com.musala.utils.AppException;
 
 public interface DroneService {
 
-	DroneDTO fetchDroneById(int droneID) throws AppException;
+	 DroneDTO fetchDroneById(int droneID)  throws SQLException, Exception;
 
-	List<DroneDTO> fetchAllDrones() throws AppException;
+	 List<DroneDTO> fetchAllDrones(UriInfo uriInfo) throws SQLException, Exception;
 
-	DroneDTO registerDrone(DroneDTO movie) throws AppException;
+	 DroneDTO registerDrone(DroneDTO movie) throws  AppException, SQLException,Exception;
 }
