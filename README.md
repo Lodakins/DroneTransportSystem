@@ -11,11 +11,11 @@ A web service that contains controller for performing action on drones such as r
 
 ## TO BUILD THIS PROJECT
 - Clone the project  your local repository 
-- Open directory in your terminal and run command ``` mvn  clean install ```
+- Open directory in your terminal and run command ``` mvn clean compile ```
 
 ## TO RUN TEST
 - Clone the project  your local repository 
-- Open directory in your terminal and run command ``` mvn  test ```
+- Open directory in your terminal and run command ``` mvn test ```
 
 ##  TO RUN THIS PROJECT 
 -  Run command  ``` mvn package ```
