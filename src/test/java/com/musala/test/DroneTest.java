@@ -2,6 +2,7 @@ package com.musala.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -15,8 +16,11 @@ import org.junit.Test;
 
 import com.musala.api.DroneController;
 import com.musala.dto.DroneDTO;
+import com.musala.dto.MedicationDTO;
 import com.musala.service.DroneService;
 import com.musala.service.DroneServiceImpl;
+import com.musala.service.MedicationService;
+import com.musala.service.MedicationServiceImpl;
 import com.musala.utils.AppException;
 
 
@@ -35,6 +39,7 @@ public class DroneTest extends JerseyTest  {
 	
 
 	DroneService droneService = new DroneServiceImpl();
+	MedicationService medService = new MedicationServiceImpl();
 	
 	@Override
 	 public Application configure() {
@@ -58,23 +63,22 @@ public class DroneTest extends JerseyTest  {
 	@Test
 	public void itShouldGetAllDrone() throws AppException, SQLException, Exception {
 		List<DroneDTO> response = droneService.fetchAllDrones();
-		assertNotNull("Should return drone object",response.size());
+		assertNotNull("Should return drone object",response.size() > 0);
 		
 	}
 	
 	@Test
 	public void itShouldGetBatteryLevel() throws AppException, SQLException, Exception {
 		DroneDTO response = droneService.fetchDroneById(1);
-		assertNotNull("Should return drone object",response.getBattery());
+		assertNotNull("Should return drone object",response.getBattery() >= 0);
 		
 	}
-//	 @Test
-//	 public void tesFetchAll() {
-//	  Response response = target("/drones").request().get();
-//	  assertEquals("should return status 200", 200, response.getStatus());
-//	  assertNotNull("Should return user list", response.getEntity().toString());
-//	  System.out.println(response.getStatus());
-//	  System.out.println(response.readEntity(String.class));
-//	 }
+	
+	@Test(expected = AppException.class)
+	public void itShouldThrowError() throws SQLException, Exception {
+		MedicationDTO response = medService.getMedicationByID(1);
+		assertNull(response);
+	}
+
 
 }

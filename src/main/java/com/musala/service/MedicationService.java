@@ -12,7 +12,7 @@ public interface MedicationService {
 	
 	MedicationDTO getMedicationByID(int medID) throws SQLException, Exception;
 	
-	List<MedicationDTO> getMedicationsByDrone( UriInfo uriInfo, int droneID) throws SQLException, Exception;
+	List<MedicationDTO> getMedicationsByDrone(int droneID) throws SQLException, Exception;
 	
 	MedicationDTO saveMedicationByDrone(int droneID, MedicationDTO medication) throws SQLException, Exception;
 }

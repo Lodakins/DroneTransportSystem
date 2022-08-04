@@ -45,7 +45,14 @@ public class MedicationController {
 		
 		try {
 			
-			List<MedicationDTO> medications = serv.getMedicationsByDrone(uriInfo,droneID);
+			List<MedicationDTO> medications = serv.getMedicationsByDrone(droneID);
+			
+			 for(MedicationDTO item : medications) {
+				 List<Link> links = new ArrayList<>();
+				 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getMedId())).toString(), "self");
+				 links.add(self);
+				 item.setLinks(links);
+			 }
 			
 			obj.add("data", new JsonParser().parse(gson.toJson(medications)));
 			obj.addProperty("count", medications == null ? 0 : medications.size());
@@ -127,7 +134,7 @@ public class MedicationController {
 			
 			
 			obj.add("data", new JsonParser().parse(gson.toJson(response)));
-			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Drone save successfully", true))));
+			obj.add("response", new JsonParser().parse(gson.toJson(new ResponseMessage("Medication details fetched successfully", true))));
 			
 			return Response.status(Status.OK).entity(obj.toString()).build();
 			

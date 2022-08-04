@@ -27,7 +27,7 @@ public class DBConnection implements IDatabase {
 	private static void initiateConnection() {
 		try {
 			Class.forName ("org.h2.Driver");
-			con  =  DriverManager.getConnection("jdbc:h2:~/dronedb;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE;INIT=RUNSCRIPT FROM 'classpath:Create_Drone_Table.sql'","","");
+			con  =  DriverManager.getConnection("jdbc:h2:mem:dronedb;INIT=RUNSCRIPT FROM 'classpath:Create_Drone_Table.sql'","","");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

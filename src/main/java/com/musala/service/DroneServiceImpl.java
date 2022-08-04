@@ -83,7 +83,6 @@ public class DroneServiceImpl  implements DroneService{
 	public List<DroneDTO> fetchAvailableDrones() throws SQLException, Exception {
 		// TODO Auto-generated method stub
 		List<DroneDTO> list = droneDAO.fetchAvailableDrones();
-		 
 		
 		return list;
 	}

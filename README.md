@@ -11,19 +11,22 @@ A web service that contains controller for performing action on drones such as r
 
 ## TO BUILD THIS PROJECT
 - Clone the project  your local repository 
-- Open directory in your terminal and run command ``` mvn  clean compile ```
+- Open directory in your terminal and run command ``` mvn  clean install ```
+
+## TO RUN TEST
+- Clone the project  your local repository 
+- Open directory in your terminal and run command ``` mvn  test ```
 
 ##  TO RUN THIS PROJECT 
--  Run command  ``` mvn deploy ```
-- A war is generated which can be found in the target folder of the project
+-  Run command  ``` mvn package ```
+- A war name ```DroneTransportSystem.war ```is generated which can be found in the target folder of the project
 -  Deploy war in tomcat server.
 
 ## ASSUMPTIONS
 - Drone battery level is set 100 , weight set to 20gr,  state set to IDLE at registration
 - Drone state changes as action are been performed on the drone.
 
-### BATTERY LOGS
- - A new Log folder is created in the working directory that logs battery level with drone ID.
+
 
 
 **Base URL**: <br>{{localhost}}/DroneTransportSystem/v1<br> 
@@ -38,7 +41,8 @@ A web service that contains controller for performing action on drones such as r
 - [Get Drone Items](#get-drone-items)
 - [Available Drones](#available-drones)
 - [Drone Battery Level](#drone-battery-level)
-- [Other Functional API](#other-functional-api)
+- [Other Functional API](#other-functional-api) 
+- [Periodic Battery Logs](#periodic-battery-logs)
 
 <br>
 
@@ -102,7 +106,7 @@ Request Body fields:
 
 
 Response Body fields:
-- **data**: A list containing the drone data;
+- **data**: A JSON object containing the drone data;
 
 >- **droneId**: Drone unique identifier
 >- **weight**: The weight of the drone
@@ -166,7 +170,7 @@ Request Body fields:
 
 
 Response Body fields:
-- **data**: A list containing the medication data;
+- **data**: A JSON object containing the medication data;
 
 >- **medId**: Medication unique identifier
 >- **weight**: The weight of the medication
@@ -378,3 +382,76 @@ Response Body fields:
 **Get drone by ID**
 
 >**GET** */drones/{droneID}* 
+
+Response Body fields:
+- **data**: A JSON object of drone data;
+
+ Response Sample body
+``` json
+{
+    "data": {
+        "droneId": 1,
+        "weight": 120,
+        "serial": "45D23SDF98OP",
+        "model": "Cruiserweight",
+        "battery": 100,
+        "state": "LOADING",
+        "links": [
+            {
+                "url": "http://localhost:8080/DroneTransportSystem/v1/drones/1",
+                "self": "self"
+            },
+            {
+                "url": "http://localhost:8080/DroneTransportSystem/v1/drones/1/medications",
+                "self": "medications"
+            }
+        ]
+    },
+    "response": {
+        "message": "Drone details successfull",
+        "status": true
+    }
+
+
+}
+
+```
+
+##### GET Specifi Drone  Medication by ID
+
+**Get medication by ID**
+
+>**GET** */drones/{droneID}/medications/{medID}* 
+
+Response Body fields:
+- **data**: A JSON object of medications data;
+
+ Response Sample body
+``` json
+{
+ "data": {
+        "medId": 1,
+        "name": "Sad949daldfeEA_-",
+        "weight": "100",
+        "code": "ASGSFD999_",
+        "droneId": 1,
+        "image": "data:image/png;base64,....",
+        "links": [
+            {
+                "url": "http://localhost:8080/DroneTransportSystem/v1/drones/1/medications/1",
+                "self": "self"
+            }
+        ]
+    },
+    "response": {
+        "message": "Medications details fetched successfully",
+        "status": true
+    }
+
+
+
+}
+```
+
+#### Periodic Battery Logs
+ - A  battery log  text file is created in the tomcat logs folder that records battery level with drone ID.

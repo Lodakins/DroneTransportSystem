@@ -21,7 +21,6 @@ public class MedicationServiceImpl implements MedicationService {
 	
 	IDatabase db = new DBConnection();
 	MedicationDAO medDAO = new MedicationDAO(db);
-	
 	DroneDAO droneDAO = new DroneDAO(db);
 	
 	private final int MAXWEIGHT = 500;
@@ -38,7 +37,7 @@ public class MedicationServiceImpl implements MedicationService {
 	}
 
 	@Override
-	public List<MedicationDTO> getMedicationsByDrone(UriInfo uriInfo, int droneID) throws AppException,SQLException, Exception {
+	public List<MedicationDTO> getMedicationsByDrone(int droneID) throws AppException,SQLException, Exception {
 		// TODO Auto-generated method stub
 		
 		DroneDTO drone = droneDAO.fetchDroneById(droneID);
@@ -47,13 +46,6 @@ public class MedicationServiceImpl implements MedicationService {
 		}
 		
 		 List<MedicationDTO> medication = medDAO.getAllMedicationByDrone(droneID);
-		 
-		 for(MedicationDTO item : medication) {
-			 List<Link> links = new ArrayList<>();
-			 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getMedId())).toString(), "self");
-			 links.add(self);
-			 item.setLinks(links);
-		 }
 		
 		return medication;
 	}
