@@ -45,7 +45,15 @@ public class DroneController {
 
 		
 		try {
-			List<DroneDTO> data = droneService.fetchAllDrones(uriInfo);
+			List<DroneDTO> data = droneService.fetchAllDrones();
+			
+			 for(DroneDTO item : data) {
+				 List<Link> links = new ArrayList<>();
+				 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getDroneId())).toString(), "self");
+				 links.add(self);
+				 
+				 item.setLinks(links);
+			 }
 			
 			obj.add("data", new JsonParser().parse(gson.toJson(data)));
 			obj.addProperty("count", data == null? 0 : data.size());
@@ -82,8 +90,17 @@ public class DroneController {
 
 		
 		try {
-			List<DroneDTO> data = droneService.fetchAvailableDrones(uriInfo);
+			List<DroneDTO> data = droneService.fetchAvailableDrones();
 			
+			 for(DroneDTO item : data) {
+				 List<Link> links = new ArrayList<>();
+				 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getDroneId())).toString(), "self");
+				 links.add(self);
+				 
+				 item.setLinks(links);
+			 }
+			 
+			 
 			obj.add("data", new JsonParser().parse(gson.toJson(data)));
 			obj.addProperty("count", data == null? 0 : data.size());
 			obj.add("response", new JsonParser().parse(new ResponseMessage("Drones fetched successfully", true).toString()));

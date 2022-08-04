@@ -15,12 +15,13 @@ import com.musala.logger.Logger;
 
 public class PeriodicTask {
 	
-	
+	 static boolean isRun= false;
 	
 	public static void runPeriodicTask() {
 		IDatabase database = new DBConnection();
 	    DroneDAO droneDAO =	new DroneDAO(database);
 		
+	    System.out.println("Periodic task started");
 		ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
 
         Runnable task1 = () -> {
@@ -43,7 +44,10 @@ public class PeriodicTask {
         };
 
         // init Delay = 5, repeat the task every 1 second
-        ScheduledFuture<?> scheduledFuture = ses.scheduleAtFixedRate(task1, 1000, 300, TimeUnit.SECONDS);  
+        if(!isRun) {
+        	ScheduledFuture<?> scheduledFuture = ses.scheduleAtFixedRate(task1, 170, 100, TimeUnit.SECONDS); 
+        }
+        	 
             
     }
 	

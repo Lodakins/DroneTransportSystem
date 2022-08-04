@@ -1,3 +1,9 @@
-/target/classes
+*.class
 
-/target/test-classes
+
+# Package Files #
+*.jar
+*.war
+*.ear
+bin/
+target/

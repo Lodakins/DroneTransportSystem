@@ -143,6 +143,7 @@ public class DroneDAO {
 	
 	public List<DroneBatterLog> getDroneBatteryLog(int droneID) throws SQLException, Exception {
 		List<DroneBatterLog> data = new ArrayList<>();
+		System.out.println("SELECT d.serial,dl.* FROM droneBatteryLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID);
 		String query="SELECT d.serial,dl.* FROM droneBatteryLog dl, drone d where d.drone_id = dl.drone_id and dl.drone_id = "+droneID;
 		ResultSet rs = this.database.getConnection().createStatement().executeQuery(query);
 		while(rs.next()) {

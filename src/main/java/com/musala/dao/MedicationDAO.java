@@ -47,6 +47,8 @@ public class MedicationDAO {
 		
 		this.database.getConnection().commit();
 		
+		med.setDroneId(droneID);
+		
 		return med;
 		
 	}

@@ -13,9 +13,9 @@ public interface DroneService {
 
 	 DroneDTO fetchDroneById(int droneID)  throws SQLException, Exception;
 
-	 List<DroneDTO> fetchAllDrones(UriInfo uriInfo) throws SQLException, Exception;
+	 List<DroneDTO> fetchAllDrones() throws SQLException, Exception;
 	 
-	 List<DroneDTO> fetchAvailableDrones(UriInfo uriInfo) throws SQLException, Exception;
+	 List<DroneDTO> fetchAvailableDrones() throws SQLException, Exception;
 
 	 DroneDTO registerDrone(DroneDTO movie) throws  AppException, SQLException,Exception;
 	 

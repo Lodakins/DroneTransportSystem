@@ -3,16 +3,20 @@ package com.musala.logger;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import com.musala.dao.PeriodicTask;
 
 public class Logger {
 
 	public Logger() {
 
 	}
+	public static String name;
 
 	public static void logClass(String message, Class<?> class_) {
 		log(message, class_.getName());
@@ -33,37 +37,27 @@ public class Logger {
 
 	private static void writeToFile(String message, String date) {
 		try {
-			Path path = FileSystems.getDefault().getPath(".").toAbsolutePath();
-			System.out.println(path);
-			File folder = new File("C://log");
-			File folder1 = new File(path.toAbsolutePath().getParent().toString()+"/logs");
+			String userDirectory = System.getProperty("user.dir");
+			
+			File folder = new File(userDirectory+"\\logs");
+		
 			if (!folder.isDirectory()) {
 				folder.mkdir();
 			}
-			if (!folder1.isDirectory()) {
-				folder.mkdir();
-			}
 			
-			File logfile = new File("C://log/publicportal-" + date + ".txt");
-			File logfile1 = new File(path.toAbsolutePath().getParent().toString()+"logs/batterlogs-" + date + ".txt");
+			File logfile = new File(userDirectory+"\\logs\\batterlogs-" + date + ".txt");
 			logfile.setReadable(true);
 			logfile.setWritable(true);
+			
 			if (logfile.createNewFile()) {
 				System.out.println("File Created");
 			}
-			logfile1.setReadable(true);
-			logfile1.setWritable(true);
-			if (logfile1.createNewFile()) {
-				System.out.println("File Created");
-			}
-			BufferedWriter fr = new BufferedWriter(new FileWriter("C://log/publicportal-" + date + ".txt", true));
-			fr.write(message + "\r\n");
-			fr.close();
 			
-			BufferedWriter fr1 = new BufferedWriter(new FileWriter(path.toString()+"/logs/batterlogs-" + date + ".txt", true));
+			BufferedWriter fr1 = new BufferedWriter(new FileWriter(userDirectory+"\\logs\\batterlogs-" + date + ".txt", true));
 			fr1.write(message + "\r\n");
 			fr1.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Error creating file. " + e.getMessage());
 		}
 	}
@@ -71,4 +65,9 @@ public class Logger {
 	public static void log(String message, Object obj) {
 		log(obj.getClass().getName()+" => "+message);
 	}
+	
+	public static void main(String[] args) {
+		Logger.log("Just Testing");
+	}
+	
 }

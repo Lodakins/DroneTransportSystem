@@ -10,30 +10,35 @@ A web service that contains controller for performing action on drones such as r
 <br>
 
 ## TO BUILD THIS PROJECT
-- Clone to your local repository and 
-- Open directory in your terminal and run command ``` mvn  clean test ```
+- Clone the project  your local repository 
+- Open directory in your terminal and run command ``` mvn  clean compile ```
 
 ##  TO RUN THIS PROJECT 
 -  Run command  ``` mvn deploy ```
-- A war is generated and can be found in the target folder
+- A war is generated which can be found in the target folder of the project
 -  Deploy war in tomcat server.
 
 ## ASSUMPTIONS
 - Drone battery level is set 100 , weight set to 20gr,  state set to IDLE at registration
+- Drone state changes as action are been performed on the drone.
+
+### BATTERY LOGS
+ - A new Log folder is created in the working directory that logs battery level with drone ID.
 
 
-**Base URL**: <br>{{localhost}}/DroneTransportSystem<br> 
+**Base URL**: <br>{{localhost}}/DroneTransportSystem/v1<br> 
 
 <br>
 
 #### Content List
 
 - [Basic Information](#basic-information)
-- [Drone Registration](#Drone-Registeration)
-- [Load Drone Medication](#Load-Drone-Medication)
-- [Get Drone Items](#Get-Drone-Items)
-- [Available Drones](#Available-Drones)
-- [Drone Battery Level](#Drone-Battery-Level)
+- [Drone Registration](#drone-registeration)
+- [Load Drone Medication](#load-drone-medication)
+- [Get Drone Items](#get-drone-items)
+- [Available Drones](#available-drones)
+- [Drone Battery Level](#drone-battery-level)
+- [Other Functional API](#other-functional-api)
 
 <br>
 
@@ -80,7 +85,7 @@ Status Code: **200**
 
 **registering a drone**
 
->**POST** */v1/drones/* 
+>**POST** */drones* 
 
 Request Body fields:
 - **model**: Drone model. Allowed values (Lightweight, Middleweight, Cruiserweight, Heavyweight)
@@ -141,7 +146,7 @@ Response Body fields:
 
 **Load drone with medication**
 
-**POST** */v1/drones/{droneID}/medications* 
+**POST** */drones/{droneID}/medications* 
 
 Request Body fields:
 - **name**: Drone model. Allowed values ( allowed only letters, numbers, ‘-‘, ‘_’)
@@ -197,6 +202,7 @@ Response Body fields:
 ```
 
 #### Get Drone Items
+
 **Get all drone medications**
 
 >**GET** */drones/{droneID}/medications* 
@@ -256,6 +262,7 @@ Response Body fields:
 
 ```
 #### Available Drones
+
 **Get all available drones**
 
 >**GET** */drones/free*
@@ -291,9 +298,10 @@ Response Body fields:
 
 ```
 #### Drone Battery Level
+
 **Get drone battery level**
 
->**GET** *drones/{droneID}/battery* 
+>**GET** */drones/{droneID}/battery* 
 
 > Response Body fields:
 - **battery**: Drone battery level;
@@ -310,3 +318,63 @@ Response Body fields:
 
 ```
 
+
+#### Other Functional API
+
+##### GET ALL DRONES
+
+**Get all drones**
+
+>**GET** */drones* 
+
+Response Body fields:
+- **data**: An array containing list of available drones;
+
+ Response Sample body
+``` json
+{
+    "data": [
+         {
+            "droneId": 1,
+            "weight": 100,
+            "serial": "855485FIR98DELIIMDKD9988",
+            "model": "Cruiserweight",
+            "battery": 100,
+            "state": "IDLE",
+            "links": [
+                {
+                    "url": "http://localhost:9099/DroneTransportSystem/v1/drones/free/1",
+                    "self": "self"
+                }
+            ]
+        },
+        {
+            "droneId": 2,
+            "weight": 100,
+            "serial": "855485FIR98DELIIMDKD9988",
+            "model": "Cruiserweight",
+            "battery": 100,
+            "state": "LOADING",
+            "links": [
+                {
+                    "url": "http://localhost:9099/DroneTransportSystem/v1/drones/free/1",
+                    "self": "self"
+                }
+            ]
+        }
+    ],
+    "count": 2,
+    "response": {
+        "message": "Drones fetched successfully",
+        "status": true
+    }
+}
+
+```
+
+
+##### GET DRONE BY ID
+
+**Get drone by ID**
+
+>**GET** */drones/{droneID}* 

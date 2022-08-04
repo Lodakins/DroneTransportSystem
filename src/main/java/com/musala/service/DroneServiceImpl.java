@@ -28,26 +28,23 @@ public class DroneServiceImpl  implements DroneService{
 	}
 	
 	@Override
-	public DroneDTO fetchDroneById(int droneID) throws SQLException, Exception{
+	public DroneDTO fetchDroneById(int droneID) throws AppException, SQLException, Exception{
 		
 		DroneDTO drone = droneDAO.fetchDroneById(droneID);
+		if(drone == null) {
+			throw new AppException("Drone does not exist");
+		}
 		
 		return drone;
 	}
 
 	@Override
-	public  List<DroneDTO> fetchAllDrones(UriInfo uriInfo) throws SQLException, Exception{
+	public  List<DroneDTO> fetchAllDrones() throws AppException,SQLException, Exception{
 		// TODO Auto-generated method stub
 		
 		 List<DroneDTO> list = droneDAO.fetchAllDrones();
 		 
-		 for(DroneDTO item : list) {
-			 List<Link> links = new ArrayList<>();
-			 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getDroneId())).toString(), "self");
-			 links.add(self);
-			 
-			 item.setLinks(links);
-		 }
+		
 		return list;
 	}
 
@@ -83,17 +80,11 @@ public class DroneServiceImpl  implements DroneService{
 	}
 
 	@Override
-	public List<DroneDTO> fetchAvailableDrones(UriInfo uriInfo) throws SQLException, Exception {
+	public List<DroneDTO> fetchAvailableDrones() throws SQLException, Exception {
 		// TODO Auto-generated method stub
 		List<DroneDTO> list = droneDAO.fetchAvailableDrones();
 		 
-		 for(DroneDTO item : list) {
-			 List<Link> links = new ArrayList<>();
-			 Link self = new Link(uriInfo.getAbsolutePathBuilder().path(Integer.toString(item.getDroneId())).toString(), "self");
-			 links.add(self);
-			 
-			 item.setLinks(links);
-		 }
+		
 		return list;
 	}
 	
